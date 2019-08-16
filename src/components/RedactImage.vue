@@ -1,12 +1,5 @@
 <template>
   <div>
-    <img
-      v-show="false"
-      ref="image"
-      :src="src"
-      @load="imageLoaded"
-      crossorigin="Anonymous"
-    >
     <canvas
       ref="canvas"
       @mousedown="mousedown"
@@ -41,7 +34,15 @@ export default {
       moving: null,
       actives: [],
       rects: [],
+      image: null,
     };
+  },
+  created() {
+    const image = new Image();
+    image.crossOrigin = 'Anonymous';
+    image.addEventListener('load', this.imageLoaded, false);
+    image.src = this.src;
+    this.image = image;
   },
   mounted() {
     const { canvas } = this.$refs;
@@ -57,17 +58,17 @@ export default {
       return this.$refs.canvas;
     },
     imageLoaded() {
-      const { canvas, image } = this.$refs;
-      canvas.width = image.width;
-      canvas.height = image.height;
+      const { canvas } = this.$refs;
+      canvas.width = this.image.width;
+      canvas.height = this.image.height;
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height);
     },
     renderCanvas() {
-      const { canvas, image } = this.$refs;
+      const { canvas } = this.$refs;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height);
       if (this.rects.length > 0) {
         this.rects.forEach(({ topLeft, width, height }) => {
           ctx.beginPath();

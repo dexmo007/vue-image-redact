@@ -1,17 +1,28 @@
 <template>
   <div id="app">
-    <RedactImage
-      class="redact"
-      ref="redacter"
-      src="https://unsplash.it/400/400"
-    />
-    <div class="toolbar">
-      <button @click="() => $refs.redacter.revert()">Revert</button>
-      <button @click="save">Save</button>
+    <div class="row wrap">
+      <div class="col">
+        Original
+        <img
+          style="max-width: 400px"
+          :src="src"
+        />
+      </div>
+      <div class="col">
+        Editing
+        <RedactImage
+          class="redact"
+          ref="redacter"
+          max-width="400px"
+          :src="src"
+        />
+        <div class="toolbar">
+          <button @click="() => $refs.redacter.revert()">Revert</button>
+          <button @click="save">Save</button>
+        </div>
+      </div>
     </div>
     <img
-      height="400"
-      width="400"
       v-if="saved"
       :src="saved"
     />
@@ -28,6 +39,7 @@ export default {
   },
   data() {
     return {
+      src: 'https://unsplash.it/400/400',
       saved: null,
     };
   },
@@ -62,7 +74,15 @@ export default {
   align-items: center;
   justify-content: center;
 }
-/* .redact >>> canvas {
-  max-width: 300px;
-} */
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+}
+.wrap {
+  flex-wrap: wrap;
+}
 </style>
