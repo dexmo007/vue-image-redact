@@ -2,12 +2,6 @@
 
 exports[`RedactImage.vue should render correctly 1`] = `
 <div>
-  <img
-    crossorigin="Anonymous"
-    src=""
-    style="display: none;"
-  />
-   
   <canvas
     tabindex="1"
   />
