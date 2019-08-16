@@ -1,20 +1,23 @@
 <template>
   <div>
     <img
+      v-show="false"
       ref="image"
       :src="src"
       @load="imageLoaded"
+      crossorigin="Anonymous"
     >
     <canvas
       ref="canvas"
-      style="border: 2px solid black"
       @mousedown="mousedown"
       @mouseup="mouseup"
       @mousemove="mousemove"
       tabindex="1"
       @keyup.delete="deleteActives"
+      :style="{
+        maxWidth, maxHeight
+      }"
     ></canvas>
-    <button @click="revert">Revert</button>
   </div>
 </template>
 
@@ -26,6 +29,10 @@ export default {
       type: String,
       required: true,
     },
+    width: String,
+    height: String,
+    maxWidth: String,
+    maxHeight: String,
   },
   data() {
     return {
@@ -36,7 +43,19 @@ export default {
       rects: [],
     };
   },
+  mounted() {
+    const { canvas } = this.$refs;
+    if (this.width) {
+      canvas.width = this.width;
+    }
+    if (this.height) {
+      canvas.height = this.height;
+    }
+  },
   methods: {
+    canvas() {
+      return this.$refs.canvas;
+    },
     imageLoaded() {
       const { canvas, image } = this.$refs;
       canvas.width = image.width;
@@ -58,6 +77,13 @@ export default {
         });
       }
     },
+    scaleOffsets(e) {
+      const { canvas } = this.$refs;
+      return {
+        x: (e.offsetX / canvas.clientWidth) * canvas.width,
+        y: (e.offsetY / canvas.clientHeight) * canvas.height,
+      };
+    },
     isWithinRect(e, rect) {
       function between(x, n, m) {
         if (n < m) {
@@ -65,9 +91,10 @@ export default {
         }
         return x >= m && x <= n;
       }
+      const { x, y } = this.scaleOffsets(e);
       return (
-        between(e.offsetX, rect.topLeft.x, rect.topLeft.x + rect.width) &&
-        between(e.offsetY, rect.topLeft.y, rect.topLeft.y + rect.height)
+        between(x, rect.topLeft.x, rect.topLeft.x + rect.width) &&
+        between(y, rect.topLeft.y, rect.topLeft.y + rect.height)
       );
     },
     getIntersectingRects(e) {
@@ -85,10 +112,7 @@ export default {
       }
       this.drawing = true;
       this.rects.push({
-        topLeft: {
-          x: e.offsetX,
-          y: e.offsetY,
-        },
+        topLeft: this.scaleOffsets(e),
         width: 0,
         height: 0,
       });
@@ -105,9 +129,10 @@ export default {
         this.renderCanvas();
         return;
       }
+      const { x, y } = this.scaleOffsets(e);
       const rect = this.rects[this.rects.length - 1];
-      rect.width = e.offsetX - rect.topLeft.x;
-      rect.height = e.offsetY - rect.topLeft.y;
+      rect.width = x - rect.topLeft.x;
+      rect.height = y - rect.topLeft.y;
       this.renderCanvas();
     },
     mouseup() {
@@ -124,7 +149,6 @@ export default {
       this.renderCanvas();
     },
     deleteActives() {
-      console.log('deleting', this.actives);
       if (this.actives.length === 0) {
         return;
       }
@@ -137,6 +161,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

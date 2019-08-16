@@ -1,17 +1,44 @@
 {
   "name": "vue-image-redact",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+  "description": "Redact parts of an image on a Canvas using Vue",
+  "version": "0.0.1",
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Henrik Drefs",
+    "url": "https://github.com/dexmo007"
   },
-  "dependencies": {
+  "keywords": [
+    "vue",
+    "image",
+    "redact",
+    "canvas"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dexmo007/vue-image-redact.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dexmo007/vue-image-redact/issues"
+  },
+  "homepage": "https://github.com/dexmo007/vue-image-redact",
+  "main": "dist/vue-image-redact.umd.min.js",
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
+  "scripts": {
+    "serve": "vue-cli-service serve sample/main.js",
+    "build": "vue-cli-service build --target lib src/components/RedactImage.vue",
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit",
+    "prepublishOnly": "yarn test:unit && yarn lint && yarn build"
+  },
+  "peerDependencies": {
     "core-js": "^2.6.5",
     "vue": "^2.6.10"
   },
+  "dependencies": {},
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.10.0",
     "@vue/cli-plugin-eslint": "^3.10.0",
