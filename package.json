@@ -1,7 +1,7 @@
 {
   "name": "vue-image-redact",
   "description": "Redact parts of an image on a Canvas using Vue",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "license": "MIT",
   "author": {
