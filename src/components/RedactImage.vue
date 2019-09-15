@@ -105,6 +105,11 @@ export default {
         .map(({ index }) => index);
     },
     mousedown(e) {
+      // only listen to left click
+      if (e.button !== 0) {
+        return;
+      }
+
       this.holding = true;
       this.actives = this.getIntersectingRects(e);
       if (this.actives.length > 0) {
@@ -137,6 +142,9 @@ export default {
       this.renderCanvas();
     },
     mouseup() {
+      if (!this.holding) {
+        return;
+      }
       this.holding = false;
       this.drawing = false;
       this.moving = null;
